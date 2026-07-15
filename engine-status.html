@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="15">
+<title>FFT Engine Status</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, system-ui, sans-serif; background: #0d1117; color: #c9d1d9; padding: 20px; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .header h1 { font-size: 1.4rem; color: #58a6ff; }
+  .uptime { color: #8b949e; font-size: 0.9rem; }
+  .summary { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+  .card { background: #161b22; padding: 15px 20px; border-radius: 8px; border: 1px solid #30363d; }
+  .card .label { color: #8b949e; font-size: 0.8rem; text-transform: uppercase; }
+  .card .value { font-size: 1.5rem; font-weight: bold; margin-top: 4px; }
+  .card .value.profit { color: #3fb950; }
+  .card .value.loss { color: #f85149; }
+  table { width: 100%; border-collapse: collapse; background: #161b22; border-radius: 8px; overflow: hidden; }
+  th { background: #21262d; padding: 10px; text-align: left; font-size: 0.8rem; color: #8b949e; text-transform: uppercase; }
+  td { padding: 10px; border-top: 1px solid #21262d; font-size: 0.9rem; }
+  td.strat { font-weight: bold; color: #58a6ff; }
+  td.dir.long { color: #3fb950; }
+  td.dir.short { color: #f85149; }
+  td.dir.flat { color: #8b949e; }
+  td.eq { text-align: right; }
+  td.pos { font-family: monospace; font-size: 0.85rem; }
+  .risk { margin-top: 15px; padding: 10px; background: #161b22; border-radius: 8px; border: 1px solid #30363d; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>⚡ FFT Engine</h1>
+    <span class="uptime">Uptime: 0h 42m | 23:14:01 UTC</span>
+  </div>
+  <div class="summary">
+    <div class="card"><div class="label">Total Equity</div><div class="value">$468.41</div></div>
+    <div class="card"><div class="label">Daily PnL</div><div class="value profit">$+0.00</div></div>
+    <div class="card"><div class="label">Risk</div><div class="value">✅ OK</div></div>
+    <div class="card"><div class="label">Active</div><div class="value">2</div></div>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Strategy</th><th>Dir</th><th>Equity</th><th>Position</th><th>Bars</th></tr>
+    </thead>
+    <tbody>
+      
+        <tr>
+          <td class="strat">ml_lr_5m</td>
+          <td class="dir flat">FLAT</td>
+          <td class="eq">$249.41</td>
+          <td class="pos">FLAT</td>
+          <td class="bars">0</td>
+        </tr>
+        <tr>
+          <td class="strat">stoch_5m</td>
+          <td class="dir flat">FLAT</td>
+          <td class="eq">$219.00</td>
+          <td class="pos">FLAT</td>
+          <td class="bars">0</td>
+        </tr>
+    </tbody>
+  </table>
+  <div class="risk">Notional: $0 | Risk checks: {}</div>
+</body>
+</html>
