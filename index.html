@@ -41,16 +41,16 @@ th { color: #8b949e; font-weight: 500; text-transform: uppercase; font-size: 0.7
 </head>
 <body>
 <h1>⭐ FFT Trader — Unified Dashboard</h1>
-<p class="subtitle"><span id="live-indicator"></span><span id="mode-text">Snapshot</span> · 2026-07-17 16:55:08 UTC · Auto-refresh 60s</p>
+<p class="subtitle"><span id="live-indicator"></span><span id="mode-text">Snapshot</span> · 2026-07-17 16:55:32 UTC · Auto-refresh 60s</p>
 
 <div class="header-bar">
-<div class="metric"><span class="metric-label">Total Equity</span><span class="metric-val" id="m-equity">$1,207.45</span></div>
+<div class="metric"><span class="metric-label">Total Equity</span><span class="metric-val" id="m-equity">$1,207.44</span></div>
 <div class="divider"></div>
-<div class="metric"><span class="metric-label">Net P&L</span><span class="metric-val pos" id="m-pnl">+1.01 (+0.1%)</span></div>
+<div class="metric"><span class="metric-label">Net P&L</span><span class="metric-val pos" id="m-pnl">+207.44 (+20.7%)</span></div>
 <div class="divider"></div>
-<div class="metric"><span class="metric-label">BTC</span><span class="metric-val">$63,654</span></div>
+<div class="metric"><span class="metric-label">BTC</span><span class="metric-val">$63,660</span></div>
 <div class="divider"></div>
-<div class="metric"><span class="metric-label">Engine</span><span class="metric-val">🟢 2h 30m</span></div>
+<div class="metric"><span class="metric-label">Engine</span><span class="metric-val" id="m-engine">🟢 2h 31m</span></div>
 <div class="divider"></div>
 <div class="metric"><span class="metric-label">Strategies</span><span class="metric-val">6 active · 4 open</span></div>
 <div class="divider"></div>
@@ -61,10 +61,10 @@ th { color: #8b949e; font-weight: 500; text-transform: uppercase; font-size: 0.7
 <h2>Strategy Breakdown</h2>
 <table id="strat-table">
 <tr><th>Strategy</th><th>Equity</th><th>Allocated</th><th>Net PnL</th><th>Trades</th><th>Fees</th><th>Win%</th><th>Status</th></tr>
-<tr><td><b>fft_daily_longonly</b><div class="strat-desc">Daily | SMA50+MACDh, SL 5% TP 10% | 2x</div><div class='pos-detail'>+0.00308 BTC @ $64,204 (PnL: $-1.69)</div></td><td>$206.37</td><td>$207.72</td><td class="pos">+2.08</td><td>0</td><td class="neg">$0.00</td><td>0%</td><td><span class="badge b-long">LONG</span></td></tr><tr><td><b>fft_momentum_5x</b><div class="strat-desc">Daily | Momentum long-only, SL 4% TP 8% | 5x</div><div class='pos-detail'>+0.00106 BTC @ $64,204 (PnL: $-0.58)</div></td><td>$70.79</td><td>$72.70</td><td class="pos">+0.71</td><td>0</td><td class="neg">$0.00</td><td>0%</td><td><span class="badge b-long">LONG</span></td></tr><tr><td><b>meanrev_daily</b><div class="strat-desc">Daily | RSI+BB mean reversion, SL 5% TP 6% | 3x</div></td><td>$209.26</td><td>$208.60</td><td class="pos">+0.00</td><td>0</td><td class="neg">$0.00</td><td>0%</td><td><span class="badge b-flat">FLAT</span></td></tr><tr><td><b>stoch_5m</b><div class="strat-desc">5m | Stoch cross + vol gate | 15x</div></td><td>$219.84</td><td>$219.00</td><td class="pos">+0.00</td><td>0</td><td class="neg">$0.00</td><td>0%</td><td><span class="badge b-flat">FLAT</span></td></tr><tr><td><b>ml_lr_5m_v2</b><div class="strat-desc">5m | ML logistic regression | 20x | v2</div><div class='pos-detail'>+-0.00333 BTC @ $63,705 (PnL: $+0.17)</div></td><td>$223.09</td><td>$228.93</td><td class="pos">+0.07</td><td>0</td><td class="neg">$0.10</td><td>0%</td><td><span class="badge b-short">SHORT</span></td></tr><tr><td><b>meanrev_5m</b><div class="strat-desc">5m | Mean reversion short-only | 2x</div><div class='pos-detail'>+-0.00417 BTC @ $63,496 (PnL: $-0.66)</div></td><td>$278.10</td><td>$278.98</td><td class="neg">-1.86</td><td>1</td><td class="neg">$0.36</td><td>0%</td><td><span class="badge b-short">SHORT</span></td></tr>
+<tr id='row-fft_daily_longonly'><td><b>fft_daily_longonly</b><div class="strat-desc">Daily | SMA50+MACDh, SL 5% TP 10% | 2x</div><div class='pos-detail'>+0.00308 BTC @ $64,204 (PnL: $-1.68)</div></td><td class='eq-cell'>$206.38</td><td>$200.00</td><td class="pos pnl-cell">+6.38</td><td>0</td><td class="neg">$0.00</td><td>0%</td><td><span class="badge b-long dir-badge">LONG</span></td></tr><tr id='row-fft_momentum_5x'><td><b>fft_momentum_5x</b><div class="strat-desc">Daily | Momentum long-only, SL 4% TP 8% | 5x</div><div class='pos-detail'>+0.00106 BTC @ $64,204 (PnL: $-0.58)</div></td><td class='eq-cell'>$70.79</td><td>$150.00</td><td class="neg pnl-cell">-79.21</td><td>0</td><td class="neg">$0.00</td><td>0%</td><td><span class="badge b-long dir-badge">LONG</span></td></tr><tr id='row-meanrev_daily'><td><b>meanrev_daily</b><div class="strat-desc">Daily | RSI+BB mean reversion, SL 5% TP 6% | 3x</div></td><td class='eq-cell'>$209.26</td><td>$150.00</td><td class="pos pnl-cell">+59.26</td><td>0</td><td class="neg">$0.00</td><td>0%</td><td><span class="badge b-flat dir-badge">FLAT</span></td></tr><tr id='row-stoch_5m'><td><b>stoch_5m</b><div class="strat-desc">5m | Stoch cross + vol gate | 15x</div></td><td class='eq-cell'>$219.84</td><td>$100.00</td><td class="pos pnl-cell">+119.84</td><td>0</td><td class="neg">$0.00</td><td>0%</td><td><span class="badge b-flat dir-badge">FLAT</span></td></tr><tr id='row-ml_lr_5m_v2'><td><b>ml_lr_5m_v2</b><div class="strat-desc">5m | ML logistic regression | 10x | v2</div><div class='pos-detail'>+-0.00333 BTC @ $63,705 (PnL: $+0.15)</div></td><td class='eq-cell'>$223.08</td><td>$200.00</td><td class="pos pnl-cell">+23.08</td><td>0</td><td class="neg">$0.10</td><td>0%</td><td><span class="badge b-short dir-badge">SHORT</span></td></tr><tr id='row-meanrev_5m'><td><b>meanrev_5m</b><div class="strat-desc">5m | Mean reversion short-only | 2x</div><div class='pos-detail'>+-0.00417 BTC @ $63,496 (PnL: $-0.68)</div></td><td class='eq-cell'>$278.09</td><td>$200.00</td><td class="pos pnl-cell">+78.09</td><td>1</td><td class="neg">$0.36</td><td>0%</td><td><span class="badge b-short dir-badge">SHORT</span></td></tr>
 <tr style="border-top:2px solid #30363d;font-weight:600;">
-<td>TOTAL (6 active)</td><td>$1,207.45</td><td>$1,215.93</td>
-<td class="pos">+1.01</td><td>1</td><td class="neg">$0.45</td><td></td><td></td>
+<td>TOTAL (6 active)</td><td>$1,207.44</td><td>$1,000.00</td>
+<td class="pos">+207.44</td><td>1</td><td class="neg">$0.45</td><td></td><td></td>
 </tr>
 </table>
 </div>
@@ -81,11 +81,12 @@ th { color: #8b949e; font-weight: 500; text-transform: uppercase; font-size: 0.7
 
 <script>
 const ENGINE_URLS = [
-  window.location.origin.startsWith('https') && window.location.port === '8790' ? window.location.origin + '/api' : null,
-  'https://100.70.172.34:8790/api',
-  'http://100.70.172.34:8790/api',
-  'http://127.0.0.1:8790/api',
+  'http://100.70.172.34:8790',
+  'http://127.0.0.1:8790',
 ].filter(Boolean);
+
+const WALLET_MAP = {"fft_daily_longonly": "0x3Dda7191D4bC6c960D9D67c9b34121fB455e3515", "fft_momentum_5x": "0x2459Bf2b54C186eF13B59Eed13E11Bce774E672C", "meanrev_daily": "0xE2C5975301Cb93041129dDC50fe7A61CAf81547c", "stoch_5m": "0x72d8593AeaF2AC9211443ac403598906C236B44B", "ml_lr_5m_v2": "0x8fE632C0c44a4097Eb7548CD98A9c6A86caC9E84", "meanrev_5m": "0x5F0CFb59eCF6A5FE437cd33CDDd47Ccb89CC80f5"};
+const HL_API = 'https://api.hyperliquid.xyz/info';
 
 let liveApi = null;
 
@@ -107,18 +108,77 @@ async function tryLive() {
   return false;
 }
 
+async function hlQuery(payload) {
+  const resp = await fetch(HL_API, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  });
+  return resp.json();
+}
+
 async function liveRefresh() {
   if (!liveApi) return;
   try {
-    const [statusResp, tradesResp] = await Promise.all([
-      fetch(liveApi + '/status').then(r => r.json()),
-      fetch(liveApi + '/trades?limit=25').then(r => r.json()),
-    ]});
+    // Fetch engine status for equity/positions
+    const statusResp = await fetch(liveApi + '/status').then(r => r.json());
+    
     let totalEq = 0;
-    Object.values(statusResp.strategies || {}).forEach(s => totalEq += s.equity || 0);
-    document.getElementById('m-equity').textContent = '$' + totalEq.toFixed(2);
+    let totalPnl = 0;
+    let openCount = 0;
+    
+    // Also fetch HL API for each wallet to get true PnL
+    for (const [stratName, wallet] of Object.entries(WALLET_MAP)) {
+      try {
+        const state = await hlQuery({type: 'clearinghouseState', user: wallet});
+        const eq = parseFloat(state.marginSummary?.accountValue || 0);
+        totalEq += eq;
+        
+        const row = document.getElementById('row-' + stratName);
+        if (!row) continue;
+        
+        const eqCell = row.querySelector('.eq-cell');
+        if (eqCell) eqCell.textContent = '$' + eq.toFixed(2);
+        
+        // Update position detail from HL
+        const positions = state.assetPositions || [];
+        const posDetail = row.querySelector('.pos-detail');
+        const dirBadge = row.querySelector('.dir-badge');
+        
+        if (positions.length > 0) {
+          const p = positions[0].position;
+          const szi = parseFloat(p.szi);
+          const entry = parseFloat(p.entryPx);
+          const upnl = parseFloat(p.unrealizedPnl || 0);
+          if (szi !== 0) {
+            const dir = szi > 0 ? 'LONG' : 'SHORT';
+            if (dirBadge) {
+              dirBadge.textContent = dir;
+              dirBadge.className = 'badge ' + (dir === 'LONG' ? 'b-long' : 'b-short') + ' dir-badge';
+            }
+            if (posDetail) {
+              posDetail.textContent = (szi > 0 ? '+' : '') + szi.toFixed(5) + ' BTC @ $' + entry.toLocaleString(undefined, {maximumFractionDigits: 0}) + ' (PnL: $' + (upnl >= 0 ? '+' : '') + upnl.toFixed(2) + ')';
+            }
+            openCount++;
+          } else {
+            if (dirBadge) { dirBadge.textContent = 'FLAT'; dirBadge.className = 'badge b-flat dir-badge'; }
+            if (posDetail) posDetail.textContent = '';
+          }
+        } else {
+          if (dirBadge) { dirBadge.textContent = 'FLAT'; dirBadge.className = 'badge b-flat dir-badge'; }
+          if (posDetail) posDetail.textContent = '';
+        }
+      } catch(e) {}
+    }
+    
+    // Update total
+    const eqEl = document.getElementById('m-equity');
+    if (eqEl) eqEl.textContent = '$' + totalEq.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    
     const up = statusResp.uptime_s || 0;
-    document.getElementById('m-engine').textContent = '🟢 ' + Math.floor(up/3600) + 'h ' + Math.floor((up%3600)/60) + 'm';
+    const engineEl = document.getElementById('m-engine');
+    if (engineEl) engineEl.textContent = '🟢 ' + Math.floor(up/3600) + 'h ' + Math.floor((up%3600)/60) + 'm';
+    
   } catch(e) {
     liveApi = null;
     document.getElementById('live-indicator').classList.remove('live');
