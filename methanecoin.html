@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MethaneCoin ($METH) — One Pager</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0a0f1e;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 40px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    border-bottom: 1px solid #1e3a5f;
+    padding-bottom: 32px;
+  }
+
+  .logo-block h1 {
+    font-size: 42px;
+    font-weight: 900;
+    color: #00d4aa;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .logo-block .ticker {
+    font-size: 16px;
+    font-weight: 600;
+    color: #7dd3c0;
+    letter-spacing: 3px;
+    margin-top: 6px;
+  }
+
+  .logo-block .tagline {
+    font-size: 14px;
+    color: #8899aa;
+    margin-top: 10px;
+    max-width: 360px;
+    line-height: 1.5;
+  }
+
+  .raise-box {
+    background: linear-gradient(135deg, #00d4aa15, #0066ff15);
+    border: 1px solid #00d4aa44;
+    border-radius: 12px;
+    padding: 20px 28px;
+    text-align: right;
+  }
+
+  .raise-box .label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #7dd3c0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .raise-box .amount {
+    font-size: 32px;
+    font-weight: 900;
+    color: #00d4aa;
+    margin-top: 4px;
+  }
+
+  .raise-box .stage {
+    font-size: 12px;
+    color: #8899aa;
+    margin-top: 4px;
+  }
+
+  /* Sections */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: #0d1525;
+    border: 1px solid #1e2d45;
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .card h3 {
+    font-size: 11px;
+    font-weight: 700;
+    color: #00d4aa;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .card p {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #b0bec5;
+  }
+
+  .card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .card ul li {
+    font-size: 13.5px;
+    color: #b0bec5;
+    padding: 5px 0;
+    border-bottom: 1px solid #1a2535;
+    line-height: 1.5;
+  }
+
+  .card ul li:last-child { border-bottom: none; }
+
+  .card ul li::before {
+    content: "→ ";
+    color: #00d4aa;
+    font-weight: 700;
+  }
+
+  /* Stat cards */
+  .stat-card {
+    background: linear-gradient(135deg, #0d1525, #0a1830);
+    border: 1px solid #1e3a5f;
+    border-radius: 12px;
+    padding: 20px 24px;
+    text-align: center;
+  }
+
+  .stat-card .number {
+    font-size: 28px;
+    font-weight: 900;
+    color: #00d4aa;
+    line-height: 1;
+  }
+
+  .stat-card .unit {
+    font-size: 13px;
+    color: #7dd3c0;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .stat-card .desc {
+    font-size: 11px;
+    color: #667788;
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  /* Token table */
+  .token-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .token-table th {
+    text-align: left;
+    color: #00d4aa;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-bottom: 1px solid #1e2d45;
+  }
+
+  .token-table td {
+    padding: 9px 12px;
+    color: #b0bec5;
+    border-bottom: 1px solid #131d2e;
+  }
+
+  .token-table tr:last-child td { border-bottom: none; }
+
+  .token-table .highlight { color: #e8eaf0; font-weight: 600; }
+
+  /* CTA */
+  .cta {
+    background: linear-gradient(135deg, #00d4aa20, #0066ff20);
+    border: 1px solid #00d4aa55;
+    border-radius: 12px;
+    padding: 28px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .cta .left h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e8eaf0;
+  }
+
+  .cta .left p {
+    font-size: 13px;
+    color: #8899aa;
+    margin-top: 6px;
+  }
+
+  .cta .contacts {
+    text-align: right;
+  }
+
+  .cta .contacts p {
+    font-size: 13px;
+    color: #7dd3c0;
+    line-height: 1.8;
+  }
+
+  /* Section title */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #445566;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    margin-top: 4px;
+  }
+
+  /* Problem highlight */
+  .problem-stat {
+    background: #12080a;
+    border-left: 3px solid #ff4444;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 20px;
+    margin-bottom: 10px;
+  }
+
+  .problem-stat .big { font-size: 22px; font-weight: 900; color: #ff6666; }
+  .problem-stat .desc { font-size: 12px; color: #887788; margin-top: 3px; }
+
+  .solution-stat {
+    background: #081210;
+    border-left: 3px solid #00d4aa;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 20px;
+    margin-bottom: 10px;
+  }
+
+  .solution-stat .big { font-size: 22px; font-weight: 900; color: #00d4aa; }
+  .solution-stat .desc { font-size: 12px; color: #558877; margin-top: 3px; }
+
+  .footer-note {
+    text-align: center;
+    font-size: 10px;
+    color: #334455;
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid #131d2e;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-block">
+      <h1>MethaneCoin</h1>
+      <div class="ticker">$METH</div>
+      <div class="tagline">Satellite-verified methane removal credits, tokenized on-chain. The carbon market's last unclaimed category.</div>
+    </div>
+    <div class="raise-box">
+      <div class="label">Pre-Seed Round</div>
+      <div class="amount">$500K</div>
+      <div class="stage">SAFE · No Cap Preference · 2026</div>
+    </div>
+  </div>
+
+  <!-- Market stats -->
+  <div class="section-title">The Opportunity</div>
+  <div class="grid-3" style="margin-bottom:28px;">
+    <div class="stat-card">
+      <div class="number">180 Gt</div>
+      <div class="unit">CH₄</div>
+      <div class="desc">Estimated methane stored in wetlands & permafrost globally</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">86×</div>
+      <div class="unit">CO₂ Equiv.</div>
+      <div class="desc">Methane's 20-year global warming potential vs. carbon dioxide</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">$150T</div>
+      <div class="unit">Market</div>
+      <div class="desc">Addressable credit value if wetland methane removal is verified & monetized</div>
+    </div>
+  </div>
+
+  <!-- Problem / Solution -->
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="card">
+      <h3>The Problem</h3>
+      <div class="problem-stat">
+        <div class="big">~30%</div>
+        <div class="desc">of global methane emissions come from natural wetlands — the single largest source</div>
+      </div>
+      <div class="problem-stat">
+        <div class="big">$0</div>
+        <div class="desc">in verified carbon credits issued for wetland/permafrost methane removal to date</div>
+      </div>
+      <p style="margin-top:12px;">Agricultural and fossil methane have funded solutions. Natural wetlands — the fastest-growing source as permafrost thaws — have none. No verification standard. No credit market. No funding.</p>
+    </div>
+    <div class="card">
+      <h3>Our Solution</h3>
+      <div class="solution-stat">
+        <div class="big">Detect</div>
+        <div class="desc">GHGSat + TROPOMI satellite data identifies emission hotspots at 25m resolution</div>
+      </div>
+      <div class="solution-stat">
+        <div class="big">Verify</div>
+        <div class="desc">Ground sensors + ML model quantifies removal, generates tamper-proof MRV data</div>
+      </div>
+      <div class="solution-stat">
+        <div class="big">Tokenize</div>
+        <div class="desc">Each verified tonne of CH₄ removal minted as $METH on Base — tradeable, retirable, auditable</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why now / moat -->
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="card">
+      <h3>Why Now</h3>
+      <ul>
+        <li>Global Methane Pledge: 150 countries committed to 30% reduction by 2030</li>
+        <li>GHGSat launched commercial methane sensing at scale in 2023</li>
+        <li>EU Carbon Border Adjustment Mechanism creating demand for verifiable credits</li>
+        <li>Voluntary carbon market shifting to MRV-backed, blockchain-verified credits</li>
+        <li>Permafrost thaw accelerating — window to act narrowing fast</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Competitive Moat</h3>
+      <ul>
+        <li>No direct competitors in wetland/permafrost methane credits</li>
+        <li>Windfall Bio (Prelude-backed) covers agricultural — we're complementary</li>
+        <li>First-mover in satellite-verified natural methane removal</li>
+        <li>On-chain issuance creates permanent, auditable credit registry</li>
+        <li>Token design enables programmatic credit retirement by corporates</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Token economics -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3>Token Economics — $METH</h3>
+    <table class="token-table">
+      <tr>
+        <th>Parameter</th>
+        <th>Detail</th>
+        <th>Parameter</th>
+        <th>Detail</th>
+      </tr>
+      <tr>
+        <td>Chain</td>
+        <td class="highlight">Base (Ethereum L2)</td>
+        <td>Total Supply</td>
+        <td class="highlight">1,000,000,000 $METH</td>
+      </tr>
+      <tr>
+        <td>Credit backing</td>
+        <td class="highlight">1 $METH = 1 tonne CH₄ removed</td>
+        <td>Retirement</td>
+        <td class="highlight">Burn-on-retire (permanent)</td>
+      </tr>
+      <tr>
+        <td>Liquidity</td>
+        <td class="highlight">Uniswap v3, locked LP</td>
+        <td>Registry</td>
+        <td class="highlight">On-chain + Gold Standard bridge (planned)</td>
+      </tr>
+      <tr>
+        <td>Team allocation</td>
+        <td class="highlight">15% · 4yr vest · 1yr cliff</td>
+        <td>Ecosystem</td>
+        <td class="highlight">40% for verified removal issuance</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Use of funds -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3>Use of Funds — $500K Seed</h3>
+    <table class="token-table">
+      <tr>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Purpose</th>
+      </tr>
+      <tr>
+        <td>Data & Sensing Infrastructure</td>
+        <td class="highlight">$200K</td>
+        <td>GHGSat data access, ground sensor pilot deployment (3 sites)</td>
+      </tr>
+      <tr>
+        <td>MRV Model Development</td>
+        <td class="highlight">$150K</td>
+        <td>ML verification pipeline, methodology documentation for Gold Standard</td>
+      </tr>
+      <tr>
+        <td>Smart Contract & Token Launch</td>
+        <td class="highlight">$75K</td>
+        <td>Audit, deploy, Uniswap listing, credit issuance contracts</td>
+      </tr>
+      <tr>
+        <td>Legal & Corporate Structure</td>
+        <td class="highlight">$50K</td>
+        <td>Delaware C-corp, token legal opinion, credit regulatory review</td>
+      </tr>
+      <tr>
+        <td>Operations / 12 months runway</td>
+        <td class="highlight">$25K</td>
+        <td>Core team stipends, tooling, cloud infrastructure</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <div class="left">
+      <h3>Ready to talk.</h3>
+      <p>Pre-seed SAFE · $500K · First close targeting Q3 2026<br>Whitepaper + technical MRV methodology available on request</p>
+    </div>
+    <div class="contacts">
+      <p>📧 [founder@methanecoin.xyz]</p>
+      <p>🌐 methanecoin.xyz (coming soon)</p>
+      <p>📄 Whitepaper: MIT Licensed, timestamped</p>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    MethaneCoin · Pre-Seed 2026 · This document is for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy securities.
+  </div>
+
+</div>
+</body>
+</html>
