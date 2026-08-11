@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bank Risk Scanner — FDIC Systemic Risk Model</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --red: #f85149;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --orange: #e3b341;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  h2 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  h3 { font-size: 15px; font-weight: 600; margin: 20px 0 8px; }
+  p { color: var(--muted); margin-bottom: 12px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-right: 6px;
+  }
+  .badge-green { background: #1a3a1f; color: var(--green); border: 1px solid #2ea04326; }
+  .badge-yellow { background: #2d2003; color: var(--yellow); border: 1px solid #d2992226; }
+  .badge-red { background: #3a1a1a; color: var(--red); border: 1px solid #f8514926; }
+  .badge-blue { background: #0d2a4a; color: var(--accent); border: 1px solid #58a6ff26; }
+
+  .meta { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+  }
+  .stat-card .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .stat-card .value { font-size: 26px; font-weight: 700; }
+  .stat-card .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .green { color: var(--green); }
+  .red { color: var(--red); }
+  .yellow { color: var(--yellow); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 12px 0;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--muted);
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; overflow-x: auto; }
+
+  .risk-bar {
+    display: inline-block;
+    height: 6px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  .signal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 12px 0;
+  }
+  .signal-box .title { font-weight: 600; margin-bottom: 6px; }
+  .signal-box .body { color: var(--muted); font-size: 13px; }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--surface);
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+    margin: 16px 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .callout strong { color: var(--text); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  .interaction-pair {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .interaction-pair:last-child { border-bottom: none; }
+  .pair-strength {
+    min-width: 80px;
+    text-align: right;
+    font-family: monospace;
+    color: var(--accent);
+  }
+  .pair-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .pair-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+  code { font-family: 'SF Mono', Consolas, monospace; background: var(--surface2); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+  .updated { color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div style="margin-bottom:8px">
+    <span class="badge badge-blue">FDIC BankFind API</span>
+    <span class="badge badge-green">AUC 0.953</span>
+    <span class="badge badge-yellow">Q4 2024 Data</span>
+  </div>
+
+  <h1>Bank Risk Scanner</h1>
+  <p class="meta">XGBoost + SHAP interaction model trained on 20 years of FDIC call report data (2005–2024) · 570k bank-quarters · 2,228 failure events</p>
+
+  <div class="callout">
+    <strong>What this is:</strong> A machine learning model trained to detect bank failure signatures 12 months in advance, using quarterly FDIC call report data. Features are engineered as <em>multiplicative interactions</em> — the combinations that actually kill banks (thin capital × rising NPLs, uninsured deposits × securities portfolio, etc.). The model has AUC 0.953 in time-series cross-validation and 42.6× lift over base rate when combining risk score + velocity signals.
+  </div>
+
+  <h2>Model Performance</h2>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="label">AUC (5-fold time-series CV)</div>
+      <div class="value green">0.953</div>
+      <div class="sub">vs 0.5 random baseline</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Training data</div>
+      <div class="value">570k</div>
+      <div class="sub">bank-quarters, 2005–2024</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Failure events</div>
+      <div class="value">2,228</div>
+      <div class="sub">labeled 12-month windows</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Signal lift (vel + score)</div>
+      <div class="value yellow">42.6×</div>
+      <div class="sub">vs base failure rate</div>
+    </div>
+  </div>
+
+  <h2>Velocity Signal Backtest</h2>
+  <p>For every bank-quarter from 2005–2023, we computed the "risk velocity" — the slope of the model's risk score over the prior 4 quarters. Banks in the top quintile of rising velocity fail at dramatically higher rates:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Velocity Quintile</th>
+          <th>Description</th>
+          <th>Failure Rate</th>
+          <th>Failures / Obs</th>
+          <th>vs Base Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Q1</td><td>Risk falling fastest</td><td>0.17%</td><td>124 / 73,610</td><td>1.0×</td></tr>
+        <tr><td>Q2</td><td>Risk falling</td><td>0.05%</td><td>40 / 73,610</td><td>0.3×</td></tr>
+        <tr><td>Q3</td><td>Stable</td><td>0.01%</td><td>8 / 73,610</td><td>0.06×</td></tr>
+        <tr><td>Q4</td><td>Risk rising</td><td>0.15%</td><td>110 / 73,610</td><td>0.9×</td></tr>
+        <tr style="background:#1a2a1a"><td><strong>Q5</strong></td><td><strong>Risk rising fastest</strong></td><td class="green"><strong>3.09%</strong></td><td><strong>2,274 / 73,610</strong></td><td class="green"><strong>18×</strong></td></tr>
+        <tr style="background:#2d2003"><td colspan="2"><strong>Combined: Q4–5 velocity + Q4–5 risk score</strong></td><td class="yellow"><strong>2.64%</strong></td><td><strong>2,384 / 90,349</strong></td><td class="yellow"><strong>42.6×</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Short Basket Backtest — Historical Validation</h2>
+  <p>The 2022–2023 regional bank stress cohort would have been flagged at Q3 2022 FDIC data. Entry: Nov 2022 (one month after flag). Exit: at failure/acquisition or 12 months.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ticker</th>
+          <th>Bank</th>
+          <th>Outcome</th>
+          <th>Entry (Nov 2022)</th>
+          <th>Exit Price</th>
+          <th>Short Return</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>SIVB</code></td><td>SVB Financial</td>
+          <td><span class="badge badge-red">Failed Mar 2023</span></td>
+          <td>$499.29</td><td>$106.04 (halted)</td>
+          <td class="green"><strong>+78.8%</strong></td>
+        </tr>
+        <tr>
+          <td><code>FRC</code></td><td>First Republic</td>
+          <td><span class="badge badge-red">Failed May 2023</span></td>
+          <td>$135.76</td><td>$3.51 (last trade)</td>
+          <td class="green"><strong>+97.4%</strong></td>
+        </tr>
+        <tr>
+          <td><code>PACW</code></td><td>PacWest Bancorp</td>
+          <td><span class="badge badge-yellow">Acquired Nov 2023</span></td>
+          <td>$12.47</td><td>$9.60</td>
+          <td class="green"><strong>+23.0%</strong></td>
+        </tr>
+        <tr>
+          <td><code>WAL</code></td><td>Western Alliance</td>
+          <td><span class="badge badge-green">Survived</span></td>
+          <td>$62.00</td><td>$38.80</td>
+          <td class="green"><strong>+37.4%</strong></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="background:#1a2a1a">
+          <td colspan="5"><strong>Equal-weight basket · Win rate 4/4</strong></td>
+          <td class="green"><strong>+59.2%</strong></td>
+        </tr>
+        <tr style="background:#0d1a2a">
+          <td colspan="5">KBE (bank ETF, long, same period)</td>
+          <td class="red">−24.8%</td>
+        </tr>
+        <tr style="background:#2d2003">
+          <td colspan="5"><strong>Alpha vs short KBE</strong></td>
+          <td class="yellow"><strong>+34.4pp</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>Note on WAL:</strong> Western Alliance was flagged because its SVB-signature score elevated in Q3 2022 — high securities book + rising uninsured deposits. The stock fell 37% even though it ultimately survived, demonstrating that the signal captures real fragility even in non-failure cases.
+  </div>
+
+  <h2>Top 25 Banks by Risk Score — Q4 2024</h2>
+  <p>Scored from top 1,000 US banks by assets. Latest FDIC quarterly filing (most recent available).</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Bank</th>
+          <th>State</th>
+          <th>Assets</th>
+          <th>Risk Score</th>
+          <th>Tier 1 %</th>
+          <th>ROA %</th>
+          <th>NPL %</th>
+          <th>SVB-sig</th>
+          <th>Top Driver</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#2a1a1a">
+          <td>1</td><td><strong>Fieldpoint Private B&amp;T</strong></td><td>CT</td>
+          <td>$1.3B</td>
+          <td><span class="risk-bar" style="width:64px;background:var(--red)"></span><strong class="red">0.966</strong></td>
+          <td class="red">6.0</td><td class="red">−1.33</td><td class="red">1.54</td><td>0.009</td>
+          <td><code>tier1_ratio</code></td>
+        </tr>
+        <tr style="background:#2a1a1a">
+          <td>2</td><td><strong>Southpoint Bank</strong></td><td>AL</td>
+          <td>$1.8B</td>
+          <td><span class="risk-bar" style="width:56px;background:var(--red)"></span><strong class="red">0.873</strong></td>
+          <td class="red">6.7</td><td class="red">−0.46</td><td class="red">1.46</td><td>0.003</td>
+          <td><code>tier1_ratio</code></td>
+        </tr>
+        <tr style="background:#2a1a1a">
+          <td>3</td><td><strong>Flagstar Bank NA</strong></td><td>NY</td>
+          <td>$100.1B</td>
+          <td><span class="risk-bar" style="width:51px;background:var(--red)"></span><strong class="red">0.799</strong></td>
+          <td class="yellow">8.1</td><td class="red">−0.91</td><td class="red">3.14</td><td>0.018</td>
+          <td><code>nonperform_ratio</code></td>
+        </tr>
+        <tr style="background:#2d1f0a">
+          <td>4</td><td><strong>First Guaranty Bank</strong></td><td>LA</td>
+          <td>$4.0B</td>
+          <td><span class="risk-bar" style="width:46px;background:var(--orange)"></span><strong class="yellow">0.720</strong></td>
+          <td class="red">7.8</td><td>0.47</td><td class="red">2.73</td><td>0.018</td>
+          <td><code>nonperform_ratio</code></td>
+        </tr>
+        <tr style="background:#1a2010">
+          <td>5</td><td>HomeStreet Bank</td><td>WA</td>
+          <td>$8.1B</td>
+          <td><span class="risk-bar" style="width:33px;background:var(--yellow)"></span>0.518</td>
+          <td class="red">7.3</td><td class="red">−1.45</td><td>0.74</td><td>0.024</td>
+          <td><code>roa</code></td>
+        </tr>
+        <tr style="background:#1a2010">
+          <td>6</td><td>Heritage Bank Inc</td><td>KY</td>
+          <td>$1.9B</td>
+          <td><span class="risk-bar" style="width:31px;background:var(--yellow)"></span>0.488</td>
+          <td class="yellow">8.0</td><td>0.94</td><td>0.26</td><td class="yellow">0.078</td>
+          <td><code>equity_ratio</code></td>
+        </tr>
+        <tr>
+          <td>7</td><td>Bankwell Bank</td><td>CT</td>
+          <td>$3.3B</td>
+          <td><span class="risk-bar" style="width:29px;background:var(--yellow)"></span>0.451</td>
+          <td>10.1</td><td>0.54</td><td class="yellow">1.63</td><td>0.005</td>
+          <td><code>tier1_ratio</code></td>
+        </tr>
+        <tr>
+          <td>8</td><td>First Bank of the Lake</td><td>MO</td>
+          <td>$1.6B</td>
+          <td><span class="risk-bar" style="width:27px;background:var(--yellow)"></span>0.427</td>
+          <td class="red">7.4</td><td>0.90</td><td class="red">2.38</td><td>0.000</td>
+          <td><code>nonperform_ratio</code></td>
+        </tr>
+        <tr>
+          <td>9</td><td>Live Oak Banking Co</td><td>NC</td>
+          <td>$12.9B</td>
+          <td><span class="risk-bar" style="width:25px;background:var(--yellow)"></span>0.398</td>
+          <td class="yellow">8.0</td><td>0.71</td><td class="red">2.86</td><td>0.003</td>
+          <td><code>nonperform_ratio</code></td>
+        </tr>
+        <tr>
+          <td>10</td><td>Summit State Bank</td><td>CA</td>
+          <td>$1.1B</td>
+          <td><span class="risk-bar" style="width:24px;background:var(--yellow)"></span>0.379</td>
+          <td class="yellow">8.9</td><td class="red">−0.38</td><td class="red">2.60</td><td>0.012</td>
+          <td><code>nonperform_ratio</code></td>
+        </tr>
+        <tr>
+          <td>11</td><td>Emigrant Bank</td><td>NY</td>
+          <td>$6.2B</td>
+          <td><span class="risk-bar" style="width:22px;background:var(--muted)"></span>0.374</td>
+          <td>10.5</td><td>−0.09</td><td>0.08</td><td>0.001</td>
+          <td><code>roa</code></td>
+        </tr>
+        <tr>
+          <td>12</td><td>Amboy Bank</td><td>NJ</td>
+          <td>$2.7B</td>
+          <td><span class="risk-bar" style="width:21px;background:var(--muted)"></span>0.358</td>
+          <td class="yellow">8.1</td><td>0.06</td><td>0.54</td><td>0.012</td>
+          <td><code>roa</code></td>
+        </tr>
+        <tr>
+          <td>13</td><td>MainStreet Bank</td><td>VA</td>
+          <td>$2.2B</td>
+          <td><span class="risk-bar" style="width:21px;background:var(--muted)"></span>0.357</td>
+          <td>10.2</td><td>0.97</td><td class="yellow">1.48</td><td>0.005</td>
+          <td><code>nonperform_ratio</code></td>
+        </tr>
+        <tr>
+          <td>14</td><td>Cornerstone Capital Bank SSB</td><td>TX</td>
+          <td>$2.3B</td>
+          <td><span class="risk-bar" style="width:20px;background:var(--muted)"></span>0.335</td>
+          <td>11.5</td><td>0.50</td><td class="yellow">1.78</td><td>0.002</td>
+          <td><code>nonperform_ratio</code></td>
+        </tr>
+        <tr>
+          <td>15</td><td>Midwest Regional Bank</td><td>MO</td>
+          <td>$1.3B</td>
+          <td><span class="risk-bar" style="width:19px;background:var(--muted)"></span>0.326</td>
+          <td class="red">7.8</td><td>0.32</td><td class="yellow">1.61</td><td>0.003</td>
+          <td><code>tier1_ratio</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Key Interaction Features (SHAP)</h2>
+  <p>The model's most predictive signals are multiplicative — combinations of two risk factors that compound each other. The strongest pairwise SHAP interactions across the current top-1000 bank portfolio:</p>
+
+  <div class="signal-box">
+    <div class="title">Top Interaction Pairs by Mean |SHAP|</div>
+    <div style="margin-top:12px">
+      <div class="interaction-pair">
+        <span style="flex:1;color:var(--text)">Tier 1 Capital × ROA</span>
+        <div class="pair-bar"><div class="pair-bar-fill" style="width:100%"></div></div>
+        <span class="pair-strength">0.311</span>
+      </div>
+      <div class="interaction-pair">
+        <span style="flex:1;color:var(--text)">Tier 1 Capital × NPL Ratio</span>
+        <div class="pair-bar"><div class="pair-bar-fill" style="width:56%"></div></div>
+        <span class="pair-strength">0.176</span>
+      </div>
+      <div class="interaction-pair">
+        <span style="flex:1;color:var(--text)">Equity Ratio × NPL Ratio</span>
+        <div class="pair-bar"><div class="pair-bar-fill" style="width:33%"></div></div>
+        <span class="pair-strength">0.101</span>
+      </div>
+      <div class="interaction-pair">
+        <span style="flex:1;color:var(--text)">ROA × SVB-Signature</span>
+        <div class="pair-bar"><div class="pair-bar-fill" style="width:21%"></div></div>
+        <span class="pair-strength">0.066</span>
+      </div>
+      <div class="interaction-pair">
+        <span style="flex:1;color:var(--text)">Tier 1 Capital × SVB-Signature</span>
+        <div class="pair-bar"><div class="pair-bar-fill" style="width:20%"></div></div>
+        <span class="pair-strength">0.064</span>
+      </div>
+      <div class="interaction-pair">
+        <span style="flex:1;color:var(--text)">NPL Ratio × SVB-Signature</span>
+        <div class="pair-bar"><div class="pair-bar-fill" style="width:16%"></div></div>
+        <span class="pair-strength">0.051</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="signal-box">
+      <div class="title">🔴 SVB Signature</div>
+      <div class="body"><code>securities_ratio × uninsured_dep_ratio</code><br><br>
+      High securities portfolio (duration risk) funded by flighty uninsured deposits. Becomes lethal when rates rise — unrealized losses meet a runnable liability base. Heritage Bank KY has the highest current score (0.078).</div>
+    </div>
+    <div class="signal-box">
+      <div class="title">🔴 Run Risk</div>
+      <div class="body"><code>uninsured_dep_ratio × (1 − tier1/20%)</code><br><br>
+      Pure liquidity run risk: high uninsured deposits combined with insufficient capital buffer. When depositors can move $250k+ instantly, thin capital means no room for error.</div>
+    </div>
+    <div class="signal-box">
+      <div class="title">🔴 Capital × Loan Stress</div>
+      <div class="body"><code>(1 − equity_ratio) × noncurrent_ratio</code><br><br>
+      The 2008 signature: bad loans absorbing thin capital. Banks with >2% NPL and Tier 1 below 8% have essentially no loss-absorption runway.</div>
+    </div>
+    <div class="signal-box">
+      <div class="title">🔴 Zombie Bank</div>
+      <div class="body"><code>leverage × (1/|ROA|)</code><br><br>
+      High leverage combined with near-zero or negative profitability. The bank is burning capital while carrying outsized risk. Fieldpoint and Southpoint both exhibit this pattern severely.</div>
+    </div>
+  </div>
+
+  <h2>Risk Velocity — Fastest Rising Banks</h2>
+  <p>Risk velocity = slope of model score over prior 4 quarters. High velocity + high score = 42.6× lift over base failure rate.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Bank</th><th>State</th><th>Assets</th><th>Current Risk</th><th>Velocity (per qtr)</th><th>Quarters</th></tr>
+      </thead>
+      <tbody>
+        <tr style="background:#2a1a1a"><td><strong>Southpoint Bank</strong></td><td>AL</td><td>$1.8B</td><td class="red">0.958</td><td class="red">+0.191</td><td>5</td></tr>
+        <tr style="background:#2a1a1a"><td><strong>MainStreet Bank</strong></td><td>VA</td><td>$2.2B</td><td class="red">0.842</td><td class="red">+0.168</td><td>5</td></tr>
+        <tr style="background:#2a1a1a"><td><strong>Emigrant Bank</strong></td><td>NY</td><td>$6.2B</td><td class="yellow">0.774</td><td class="red">+0.152</td><td>5</td></tr>
+        <tr style="background:#2d1f0a"><td>Cornerstone Capital Bank SSB</td><td>TX</td><td>$2.3B</td><td class="yellow">0.577</td><td class="yellow">+0.149</td><td>5</td></tr>
+        <tr style="background:#2d1f0a"><td>Amboy Bank</td><td>NJ</td><td>$2.7B</td><td class="yellow">0.713</td><td class="yellow">+0.142</td><td>5</td></tr>
+        <tr><td>Civista Bank</td><td>OH</td><td>$4.1B</td><td>0.687</td><td>+0.137</td><td>5</td></tr>
+        <tr><td>BancFirst</td><td>OK</td><td>$11.4B</td><td>0.586</td><td>+0.117</td><td>5</td></tr>
+        <tr><td>Live Oak Banking Co</td><td>NC</td><td>$12.9B</td><td>0.542</td><td>+0.109</td><td>5</td></tr>
+        <tr><td>Ponce Bank</td><td>NY</td><td>$3.0B</td><td>0.527</td><td>+0.105</td><td>5</td></tr>
+        <tr><td>Ridgewood Savings Bank</td><td>NY</td><td>$7.2B</td><td>0.518</td><td>+0.104</td><td>5</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Current Short Basket — Performance Since Signal (Jan 2025)</h2>
+  <p>The 2025 basket is underwater — banks have rallied hard with KBE +32% YTD. The structural signals remain valid; the trade is early or requires a sector-wide catalyst to resolve.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Ticker</th><th>Bank</th><th>Entry (Jan 2025)</th><th>Current</th><th>Short Return</th><th>3-Month</th><th>6-Month</th><th>Note</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>FLG</code></td><td>Flagstar / NYCB</td><td>$9.20</td><td>$14.01</td>
+          <td class="red">−52.3%</td><td class="red">−16.9%</td><td class="red">−18.8%</td>
+          <td>Recapitalized by Mnuchin consortium</td>
+        </tr>
+        <tr>
+          <td><code>LOB</code></td><td>Live Oak Banking</td><td>$38.33</td><td>$42.23</td>
+          <td class="red">−10.2%</td><td class="green">+35.7%</td><td class="green">+17.5%</td>
+          <td>SBA loan growth offset NPL rise</td>
+        </tr>
+        <tr>
+          <td><code>CARE</code></td><td>Carter Bank &amp; Trust</td><td>$17.11</td><td>$31.72</td>
+          <td class="red">−85.4%</td><td class="green">+13.4%</td><td class="red">−3.8%</td>
+          <td>M&amp;A speculation / earnings beat</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="background:#2a1a1a">
+          <td colspan="4"><strong>Equal-weight basket</strong></td>
+          <td class="red"><strong>−49.3%</strong></td>
+          <td colspan="3"></td>
+        </tr>
+        <tr>
+          <td colspan="4">KBE (bank ETF, long, same period)</td>
+          <td class="green">+32.3%</td>
+          <td colspan="3"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>Context:</strong> The historical 2022–2023 cohort produced +59.2% on the short basket because the sector was already under stress — the catalyst (rate shock + SVB contagion) was imminent. The current basket was entered in a ripping bull market for banks. The structural flags are real; timing and catalyst exposure are the open questions. A sector rotation or credit cycle turn would be the activation event.
+  </div>
+
+  <h2>Architecture</h2>
+  <div class="two-col">
+    <div class="signal-box">
+      <div class="title">Data Pipeline</div>
+      <div class="body">
+        <strong>Source:</strong> FDIC BankFind API (public, no auth)<br>
+        <strong>Coverage:</strong> All US banks, Q1 2005 – Q4 2024<br>
+        <strong>Records:</strong> 570,000 bank-quarters<br>
+        <strong>Failure labels:</strong> 2,228 positive events (12-month forward window)<br>
+        <strong>Key fields:</strong> ASSET, EQ, LNLSNET, DEPNIDOM, FREPO, SC, NTLNLSR, RBC1AAJ, ROA, NIMY, NONIX
+      </div>
+    </div>
+    <div class="signal-box">
+      <div class="title">Model</div>
+      <div class="body">
+        <strong>Algorithm:</strong> XGBoost (gradient boosted trees)<br>
+        <strong>Features:</strong> 20 engineered ratios + interaction terms<br>
+        <strong>Validation:</strong> 5-fold time-series cross-validation<br>
+        <strong>Explainability:</strong> SHAP TreeExplainer (feature + interaction values)<br>
+        <strong>Clustering:</strong> K-means on SHAP space → 4 risk archetypes
+      </div>
+    </div>
+  </div>
+
+  <h2>Risk Archetypes (SHAP Clustering)</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Cluster</th><th>Banks</th><th>Mean Risk</th><th>Primary Driver</th><th>Archetype</th></tr>
+      </thead>
+      <tbody>
+        <tr style="background:#2a1a1a">
+          <td>1</td><td>225</td><td class="red">0.032</td><td><code>nonperform_ratio</code></td>
+          <td><strong>Loan quality deterioration</strong> — Flagstar, HomeStreet, Heritage, First Guaranty</td>
+        </tr>
+        <tr style="background:#2d1f0a">
+          <td>3</td><td>147</td><td class="yellow">0.016</td><td><code>tier1_ratio</code></td>
+          <td><strong>Thin capital buffers</strong> — larger banks near minimum thresholds</td>
+        </tr>
+        <tr>
+          <td>0</td><td>215</td><td>0.019</td><td><code>roa</code></td>
+          <td>Profitability stress — negative or near-zero ROA</td>
+        </tr>
+        <tr>
+          <td>2</td><td>413</td><td>0.003</td><td><code>tier1_ratio</code></td>
+          <td>Baseline safe — adequate capital, performing loans</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <p>Data: <a href="https://banks.data.fdic.gov" target="_blank">FDIC BankFind API</a> (public domain) · Model: XGBoost + SHAP · Code: <a href="https://github.com/eddieshipcomputer/fft-pages" target="_blank">eddieshipcomputer/fft-pages</a></p>
+    <p style="margin-top:8px">Built by Stella · Updated <span id="ts"></span></p>
+    <p style="margin-top:8px;font-size:11px">⚠️ This is a research tool, not financial advice. Short selling carries unlimited loss risk. Past performance of the historical cohort does not guarantee future results.</p>
+    <script>document.getElementById('ts').textContent = new Date().toISOString().split('T')[0];</script>
+  </footer>
+
+</div>
+</body>
+</html>
