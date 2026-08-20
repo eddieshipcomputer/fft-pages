@@ -4,164 +4,127 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="refresh" content="300">
-<title>Portfolio Dashboard — V3</title>
+<title>Portfolio — Stella</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, system-ui, sans-serif; background: #0d1117; color: #c9d1d9; padding: 20px; max-width: 1200px; margin: 0 auto; }
-  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-  .header h1 { font-size: 1.5rem; color: #58a6ff; }
-  .header .subtitle { color: #8b949e; font-size: 0.9rem; }
-  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 20px; }
-  .card { background: #161b22; padding: 15px 20px; border-radius: 8px; border: 1px solid #30363d; }
-  .card .label { color: #8b949e; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
-  .card .value { font-size: 1.4rem; font-weight: bold; margin-top: 4px; }
-  .card .value.profit { color: #3fb950; }
-  .card .value.loss { color: #f85149; }
-  .card .value.warning { color: #d29922; }
-  .section { margin-bottom: 25px; }
-  .section h2 { font-size: 1.1rem; color: #58a6ff; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #30363d; }
-  table { width: 100%; border-collapse: collapse; background: #161b22; border-radius: 8px; overflow: hidden; }
-  th { background: #21262d; padding: 10px; text-align: left; font-size: 0.75rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; }
-  td { padding: 10px; border-top: 1px solid #21262d; font-size: 0.9rem; }
-  td.strat { font-weight: bold; color: #58a6ff; }
-  td.profit { color: #3fb950; }
-  td.loss { color: #f85149; }
-  td.eq { text-align: right; font-family: monospace; }
-  td.num { text-align: right; font-family: monospace; }
-  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.7rem; font-weight: bold; }
-  .tag.active { background: #1a4733; color: #3fb950; }
-  .tag.killed { background: #4a1e1e; color: #f85149; }
-  .tag.funding { background: #3b2a1a; color: #d29922; }
-  .positions { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
-  .pos-card { background: #161b22; padding: 15px; border-radius: 8px; border: 1px solid #30363d; }
-  .pos-card .pos-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-  .pos-card .coin { font-size: 1.1rem; font-weight: bold; }
-  .pos-card .side-short { color: #f85149; }
-  .pos-card .side-long { color: #3fb950; }
-  .pos-card .detail { color: #8b949e; font-size: 0.85rem; margin-top: 4px; }
-  .pos-card .funding-yield { color: #d29922; font-weight: bold; }
-  .footer { margin-top: 20px; color: #8b949e; font-size: 0.8rem; text-align: center; }
-  .tv-chart { margin-top: 15px; background: #161b22; border-radius: 8px; border: 1px solid #30363d; overflow: hidden; }
-  .tv-chart h2 { font-size: 1rem; color: #58a6ff; padding: 15px 15px 0; }
-  .tv-chart-container { width: 100%; height: 400px; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, system-ui, sans-serif; background: #0d1117; color: #c9d1d9; padding: 20px; max-width: 1100px; margin: 0 auto; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+.header h1 { font-size: 1.5rem; color: #58a6ff; }
+.subtitle { color: #8b949e; font-size: 0.85rem; }
+.summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 28px; }
+.card { background: #161b22; padding: 16px 20px; border-radius: 8px; border: 1px solid #30363d; }
+.card .label { color: #8b949e; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.card .value { font-size: 1.4rem; font-weight: bold; margin-top: 5px; }
+.green { color: #3fb950; } .red { color: #f85149; } .yellow { color: #d29922; } .blue { color: #58a6ff; }
+.section { margin-bottom: 28px; }
+.section h2 { font-size: 1.05rem; color: #58a6ff; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #30363d; }
+table { width: 100%; border-collapse: collapse; background: #161b22; border-radius: 8px; overflow: hidden; font-size: 0.88rem; }
+th { background: #21262d; padding: 10px 12px; text-align: left; font-size: 0.72rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; }
+td { padding: 10px 12px; border-top: 1px solid #21262d; }
+td.num { text-align: right; font-family: monospace; }
+td.coin { font-weight: bold; color: #e6edf3; }
+.tag-short { display: inline-block; padding: 2px 7px; border-radius: 3px; font-size: 0.7rem; font-weight: bold; background: #4a1e1e; color: #f85149; }
+.tag-long  { display: inline-block; padding: 2px 7px; border-radius: 3px; font-size: 0.7rem; font-weight: bold; background: #1a4733; color: #3fb950; }
+.tag-wallet { display: inline-block; padding: 2px 7px; border-radius: 3px; font-size: 0.7rem; background: #21262d; color: #8b949e; }
+.footer { margin-top: 24px; color: #8b949e; font-size: 0.78rem; text-align: center; }
 </style>
 </head>
 <body>
   <div class="header">
-    <h1>⚡ Stella V3 — Portfolio</h1>
-    <span class="subtitle">Hyperliquid L2 · Updated 21:30 UTC</span>
+    <h1>⭐ Stella — Portfolio</h1>
+    <span class="subtitle">Hyperliquid L2 · 2026-08-20 14:05 UTC</span>
   </div>
   
-        <div class="section">
-          <h2>🌾 Funding Harvest</h2>
-          <table>
-            <thead><tr><th>Asset</th><th>Allocated</th><th>Leverage</th><th>Ann Funding</th><th>Monthly Income</th></tr></thead>
-            <tbody><tr><td class="strat">SAGA</td><td>$50</td><td>2.0x</td><td class="profit">25.6%</td><td class="num">$1.07/mo</td></tr><tr><td class="strat">CASHCAT</td><td>$50</td><td>2.0x</td><td class="profit">13.6%</td><td class="num">$0.57/mo</td></tr></tbody>
-          </table>
-        </div>
-        
-  
     <div class="summary">
-      <div class="card"><div class="label">Portfolio Value</div><div class="value">$1,369.78</div></div>
-      <div class="card"><div class="label">Engine Equity</div><div class="value">$895.42</div></div>
-      <div class="card"><div class="label">30d Net P&L</div><div class="value loss">$-16.77</div></div>
-      <div class="card"><div class="label">7d Net P&L</div><div class="value profit">$+68.38</div></div>
-      <div class="card"><div class="label">30d Fees Paid</div><div class="value loss">$111.88</div></div>
-      <div class="card"><div class="label">Active Strategies</div><div class="value">2</div></div>
-      <div class="card"><div class="label">Funding Harv/mo</div><div class="value warning">$1.63</div></div>
+      <div class="card"><div class="label">Portfolio Value</div><div class="value blue">$2,593.16</div></div>
+      <div class="card"><div class="label">Unrealized PnL</div><div class="value green">+$0.00</div></div>
+      <div class="card"><div class="label">Harvest Monthly</div><div class="value yellow">$73.33/mo</div></div>
+      <div class="card"><div class="label">Harvest Notional</div><div class="value">$1,207</div></div>
+      <div class="card"><div class="label">Avg Ann Funding</div><div class="value yellow">72.9%</div></div>
     </div>
     
   
         <div class="section">
-          <h2>📊 Open Positions (4)</h2>
-          <div class="positions">
-        <div class="pos-card">
-          <div class="pos-header">
-            <span class="coin">BTC <span class="side-short">SHORT</span></span>
-            <span class="tag funding">conviction_short</span>
+          <h2>🌾 Funding Harvest — Discretionary Wallet</h2>
+          <table>
+            <thead><tr>
+              <th>Asset</th><th>Side</th><th>Size</th><th>Entry</th><th>Mark</th>
+              <th>Notional</th><th>Ann%</th><th>Monthly</th><th>uPnL</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class="coin">CASHCAT</td>
+              <td><span class="tag-short">SHORT</span></td>
+              <td class="num">2,500.00</td>
+              <td class="num">$0.119974</td>
+              <td class="num">$0.12931</td>
+              <td class="num">$323</td>
+              <td class="num yellow">242.3%</td>
+              <td class="num yellow">$65.27/mo</td>
+              <td class="num red">$-23.34</td>
+            </tr>
+            <tr>
+              <td class="coin">BOME</td>
+              <td><span class="tag-short">SHORT</span></td>
+              <td class="num">237,717.00</td>
+              <td class="num">$0.00126</td>
+              <td class="num">$0.001241</td>
+              <td class="num">$295</td>
+              <td class="num yellow">11.0%</td>
+              <td class="num yellow">$2.69/mo</td>
+              <td class="num green">+$4.52</td>
+            </tr>
+            <tr>
+              <td class="coin">CHIP</td>
+              <td><span class="tag-short">SHORT</span></td>
+              <td class="num">9,778.00</td>
+              <td class="num">$0.030668</td>
+              <td class="num">$0.029818</td>
+              <td class="num">$292</td>
+              <td class="num yellow">11.0%</td>
+              <td class="num yellow">$2.66/mo</td>
+              <td class="num green">+$8.31</td>
+            </tr>
+            <tr>
+              <td class="coin">GRAM</td>
+              <td><span class="tag-short">SHORT</span></td>
+              <td class="num">214.00</td>
+              <td class="num">$1.3976</td>
+              <td class="num">$1.3881</td>
+              <td class="num">$297</td>
+              <td class="num yellow">11.0%</td>
+              <td class="num yellow">$2.71/mo</td>
+              <td class="num green">+$2.03</td>
+            </tr></tbody>
+          </table>
+          <div style="margin-top:10px;color:#8b949e;font-size:0.82rem;">
+            Total: $1,207 notional · Est. <span class="yellow">$73.33/mo</span> · <span class="yellow">$880.01/yr</span>
           </div>
-          <div class="detail">Size: 0.4633 @ $64747.0000 → $64638.0000</div>
-          <div class="detail">Leverage: 40x | uPnL: <span class="profit">$+51.43</span></div>
-          
         </div>
-        
-        <div class="pos-card">
-          <div class="pos-header">
-            <span class="coin">BTC <span class="side-short">SHORT</span></span>
-            <span class="tag funding">fft_daily_longonly</span>
-          </div>
-          <div class="detail">Size: 0.1208 @ $64740.0000 → $64638.0000</div>
-          <div class="detail">Leverage: 40x | uPnL: <span class="profit">$+12.56</span></div>
-          
-        </div>
-        
-        <div class="pos-card">
-          <div class="pos-header">
-            <span class="coin">BTC <span class="side-short">SHORT</span></span>
-            <span class="tag funding">meanrev_5m</span>
-          </div>
-          <div class="detail">Size: 0.0438 @ $64740.0000 → $64638.0000</div>
-          <div class="detail">Leverage: 40x | uPnL: <span class="profit">$+4.54</span></div>
-          
-        </div>
-        
-        <div class="pos-card">
-          <div class="pos-header">
-            <span class="coin">BTC <span class="side-short">SHORT</span></span>
-            <span class="tag funding">MAIN</span>
-          </div>
-          <div class="detail">Size: 0.0299 @ $64740.0000 → $64638.0000</div>
-          <div class="detail">Leverage: 40x | uPnL: <span class="profit">$+3.10</span></div>
-          
-        </div>
-        </div>
-        </div>
-        
+  
   
     <div class="section">
-      <h2>🟢 Active Strategies</h2>
+      <h2>👛 Wallets</h2>
       <table>
-        <thead><tr><th>Strategy</th><th>Status</th><th>Equity</th><th>Dir</th><th>30d Fills</th><th>30d Volume</th><th>30d Net P&L</th></tr></thead>
-        <tbody><tr><td class="strat">conviction_short</td><td><span class="tag active">ACTIVE</span></td><td class="eq">$817</td><td>FLAT</td><td class="num">63</td><td class="num">$139,007</td><td class="num profit">$+52.07</td></tr><tr><td class="strat">meanrev_5m</td><td><span class="tag active">ACTIVE</span></td><td class="eq">$78</td><td>FLAT</td><td class="num">74</td><td class="num">$16,479</td><td class="num loss">$-0.61</td></tr></tbody>
+        <thead><tr><th>Wallet</th><th>Value</th><th>uPnL</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="coin">discretionary</td>
+          <td class="num blue">$2,279.63</td>
+          <td class="num green">+$0.00</td>
+        </tr>
+        <tr>
+          <td class="coin">primary</td>
+          <td class="num blue">$113.46</td>
+          <td class="num green">+$0.00</td>
+        </tr>
+        <tr>
+          <td class="coin">meanrev_5m</td>
+          <td class="num blue">$200.07</td>
+          <td class="num green">+$0.00</td>
+        </tr></tbody>
       </table>
     </div>
-    
-  
-        <div class="section">
-          <h2>🔴 Killed Strategies (30d residual data)</h2>
-          <table>
-            <thead><tr><th>Strategy</th><th>Status</th><th>30d Fills</th><th>30d Fees</th><th>30d Net P&L</th></tr></thead>
-            <tbody><tr><td class="strat">MAIN</td><td><span class="tag killed">KILLED</span></td><td class="num">1</td><td class="num loss">$0.87</td><td class="num loss">$-0.87</td></tr><tr><td class="strat">intraday_short_v2</td><td><span class="tag killed">KILLED</span></td><td class="num">11</td><td class="num loss">$1.53</td><td class="num loss">$-5.96</td></tr><tr><td class="strat">fft_momentum_5x</td><td><span class="tag killed">KILLED</span></td><td class="num">35</td><td class="num loss">$1.05</td><td class="num loss">$-6.45</td></tr><tr><td class="strat">fft_daily_longonly</td><td><span class="tag killed">KILLED</span></td><td class="num">40</td><td class="num loss">$6.17</td><td class="num loss">$-7.51</td></tr><tr><td class="strat">ml_lr_5m_v2</td><td><span class="tag killed">KILLED</span></td><td class="num">130</td><td class="num loss">$10.70</td><td class="num loss">$-14.01</td></tr><tr><td class="strat">stoch_5m</td><td><span class="tag killed">KILLED</span></td><td class="num">94</td><td class="num loss">$5.98</td><td class="num loss">$-14.35</td></tr><tr><td class="strat">ml_lr_5m</td><td><span class="tag killed">KILLED</span></td><td class="num">214</td><td class="num loss">$19.70</td><td class="num loss">$-19.07</td></tr></tbody>
-          </table>
-        </div>
-        
-  
-    <div class="tv-chart">
-      <h2>📈 BTC/USDT</h2>
-      <div class="tv-chart-container">
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-        {
-          "autosize": true,
-          "symbol": "BINANCE:BTCUSDT",
-          "interval": "60",
-          "timezone": "UTC",
-          "theme": "dark",
-          "style": "1",
-          "locale": "en",
-          "enable_publishing": false,
-          "save_image": false,
-          "calendar": false,
-          "hide_volume": false
-        }
-        </script>
-      </div>
-    </div>
-    
-  
-    <div class="footer">
-      Generated 2026-08-05 21:30:14 UTC by Stella V3 Portfolio Dashboard<br>
-      Data: Hyperliquid Info API + FFT Engine | Auto-refresh: 5 min
-    </div>
-    
+  <div class="footer">Auto-refreshes every 5 min · <a href="https://eddieshipcomputer.github.io/fft-pages/" style="color:#58a6ff">fft-pages</a></div>
 </body>
 </html>
